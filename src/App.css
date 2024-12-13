@@ -1,0 +1,22 @@
+.App {
+  text-align: center;
+}
+
+header {
+  background-color: #282c34;
+  padding: 20px;
+  color: white;
+}
+
+footer {
+  background-color: #282c34;
+  padding: 10px;
+  color: white;
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+}
+
+main {
+  padding: 20px;
+}
