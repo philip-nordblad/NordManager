@@ -16,5 +16,6 @@
   "bugs": {
     "url": "https://github.com/philip-nordblad/NordManager/issues"
   },
-  "homepage": "https://github.com/philip-nordblad/NordManager#readme"
+  "homepage": "https://github.com/philip-nordblad/NordManager#readme",
+  "proxy" : "http:://127.0.0.1:5000"
 }
