@@ -26,6 +26,17 @@ def add_expense():
     conn.close()
     return "", 201
 
+
+@app.route("/api/expenses/<int:id>", methods = ["DELETE"])
+def delete_expense(id):
+    conn = get_db_connection()
+    conn.execute("DELETE FROM expenses WHERE id = ?", (id,))
+    conn.commit()
+    conn.close()
+    return "", 204
+
+
+
 @app.route("/api/tasks", methods=["GET"])
 def get_tasks():
     conn = get_db_connection()

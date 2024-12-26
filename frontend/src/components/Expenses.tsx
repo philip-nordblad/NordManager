@@ -35,6 +35,18 @@ const Expenses: React.FC = () => {
       });
   };
 
+  const handleDelete = (id: number) => {
+    axiosInstance.delete(`/expenses/${id}`)
+    .then(() => {
+      setExpenses(expenses.filter(expense => expense.id !== id));
+
+    })
+    .catch(error => {
+      console.log("There was an error deleting the expense",error)
+    });
+  };
+  
+
   return (
     <div>
       <h2>Expenses</h2>
@@ -57,7 +69,8 @@ const Expenses: React.FC = () => {
       </form>
       <ul>
         {expenses.map(expense => (
-          <li key={expense.id}>{expense.title}: ${expense.amount}</li>
+          <li key={expense.id}>{expense.title}: ${expense.amount}
+          <button onClick={() => handleDelete(expense.id)}>Delete</button></li>
         ))}
       </ul>
     </div>
