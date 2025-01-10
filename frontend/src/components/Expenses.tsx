@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axiosInstance from '../axiosInstance';
+import './Expenses.modules.css'
 
 interface Expense {
   id: number;
@@ -69,8 +70,10 @@ const Expenses: React.FC = () => {
       </form>
       <ul>
         {expenses.map(expense => (
-          <li key={expense.id}>{expense.title}: ${expense.amount}
-          <button onClick={() => handleDelete(expense.id)}>Delete</button></li>
+            <li className="expenseRow" key={expense.id}>
+            {expense.title}: ${expense.amount}
+            <button className='deleteButton' onClick={() => handleDelete(expense.id)}>Delete</button>
+            </li>
         ))}
       </ul>
     </div>
