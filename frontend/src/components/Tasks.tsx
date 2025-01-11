@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axiosInstance from '../axiosInstance';
+import './sharedStyles.css'
 
 interface Task {
   id: number;

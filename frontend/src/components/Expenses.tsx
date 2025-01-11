@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axiosInstance from '../axiosInstance';
 import './Expenses.modules.css'
+import './sharedStyles.css'
 
 interface Expense {
   id: number;

@@ -55,6 +55,14 @@ def add_task():
     conn.close()
     return '', 201
 
+@app.route("/api/tasks/<int:id>", methods = ["DELETE"])
+def delete_task(id):
+    conn = get_db_connection()
+    tasks = conn.exectue("DELETE FROM tasks WHERE id = ?", (id,))
+    conn.commit()
+    conn.close()
+    return "", 204
+
 @app.route("/api/events", methods=["GET"])
 def get_events():
     conn = get_db_connection()
@@ -72,6 +80,14 @@ def add_event():
     conn.commit()
     conn.close()
     return '', 201
+
+@app.route("/api/events/<int:id>", methods = ["DELETE"])
+def delete_event(id):
+    conn = get_db_connection()
+    tasks = conn.execute("DELETE FROM events WHERE id = ?", (id,))
+    conn.commit()
+    conn.close()
+    return "", 204
 
 if __name__ == '__main__':
     app.run(port=5000)
