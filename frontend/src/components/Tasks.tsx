@@ -14,26 +14,41 @@ const Tasks: React.FC = () => {
   const [completed, setCompleted] = useState(false);
 
   useEffect(() => {
-    axiosInstance.get('/tasks')
-      .then(response => {
+    const fetchTasks = async () => {
+      try {
+        const response = await axiosInstance.get('/tasks');
         setTasks(response.data);
-      })
-      .catch(error => {
-        console.error('There was an error fetching the tasks!', error);
-      });
+      } catch (error) {
+        console.log("There was an errro fetching the expenses", error);
+      }
+    };
+    fetchTasks();
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    axiosInstance.post('/tasks', { name, completed })
-      .then(response => {
-        setTasks([...tasks, response.data]);
-        setName('');
-        setCompleted(false);
-      })
-      .catch(error => {
-        console.error('There was an error adding the task!', error);
-      });
+    try {
+      const response = await axiosInstance.post('/tasks', {name,completed});
+      setTasks([...tasks,response.data]);
+      setName('');
+      setCompleted(false);
+    } catch (error) {
+      console.log("There was an error adding the expense",error);
+      }
+    };
+
+
+
+
+
+  const handleDelete = async (id: number) => {
+    try {
+      await axiosInstance.delete(`/tasks/${id}`);
+      setTasks(tasks.filter(task => task.id !== id));
+
+    } catch (error) {
+      console.log("There was an error deleting the task", error);
+    }
   };
 
   return (
@@ -59,7 +74,9 @@ const Tasks: React.FC = () => {
       </form>
       <ul>
         {tasks.map(task => (
-          <li key={task.id}>{task.name}: {task.completed ? 'Completed' : 'Incomplete'}</li>
+          <li key={task.id}>{task.name}: {task.completed ? 'Completed' : 'Incomplete'}
+          <button className= "deleteButton" onClick={() => handleDelete(task.id)}>Delete</button></li>
+
         ))}
       </ul>
     </div>

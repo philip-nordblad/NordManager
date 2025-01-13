@@ -23,19 +23,17 @@ def add_expense():
     conn = get_db_connection()
     conn.execute("INSERT INTO expenses (title, amount) VALUES (?, ?)", (title, amount))
     conn.commit()
+    expense_id = conn.execute("SELECT last_insert_rowid()").fetchone()[0]
     conn.close()
-    return "", 201
+    return jsonify({"id": expense_id, "title": title, "amount": amount}), 201
 
-
-@app.route("/api/expenses/<int:id>", methods = ["DELETE"])
+@app.route("/api/expenses/<int:id>", methods=["DELETE"])
 def delete_expense(id):
     conn = get_db_connection()
     conn.execute("DELETE FROM expenses WHERE id = ?", (id,))
     conn.commit()
     conn.close()
     return "", 204
-
-
 
 @app.route("/api/tasks", methods=["GET"])
 def get_tasks():
@@ -52,16 +50,9 @@ def add_task():
     conn = get_db_connection()
     conn.execute('INSERT INTO tasks (name, completed) VALUES (?, ?)', (name, completed))
     conn.commit()
+    task_id = conn.execute("SELECT last_insert_rowid()").fetchone()[0]
     conn.close()
-    return '', 201
-
-@app.route("/api/tasks/<int:id>", methods = ["DELETE"])
-def delete_task(id):
-    conn = get_db_connection()
-    tasks = conn.exectue("DELETE FROM tasks WHERE id = ?", (id,))
-    conn.commit()
-    conn.close()
-    return "", 204
+    return jsonify({"id" : task_id, "name" : name, "completed" : completed}), 201
 
 @app.route("/api/events", methods=["GET"])
 def get_events():
@@ -78,16 +69,9 @@ def add_event():
     conn = get_db_connection()
     conn.execute('INSERT INTO events (name, date) VALUES (?, ?)', (name, date))
     conn.commit()
+    task_id = conn.execute("SELECT last_insert_rowid()").fetchone()[0]
     conn.close()
-    return '', 201
-
-@app.route("/api/events/<int:id>", methods = ["DELETE"])
-def delete_event(id):
-    conn = get_db_connection()
-    tasks = conn.execute("DELETE FROM events WHERE id = ?", (id,))
-    conn.commit()
-    conn.close()
-    return "", 204
+    return jsonify({"id" : task_id, "name" : name, "date": date}), 201
 
 if __name__ == '__main__':
     app.run(port=5000)

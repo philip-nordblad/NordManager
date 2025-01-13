@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axiosInstance from '../axiosInstance';
-import './Expenses.modules.css'
-import './sharedStyles.css'
+import './Expenses.modules.css';
 
 interface Expense {
   id: number;
@@ -15,39 +14,38 @@ const Expenses: React.FC = () => {
   const [amount, setAmount] = useState('');
 
   useEffect(() => {
-    axiosInstance.get('/expenses')
-      .then(response => {
+    const fetchExpenses = async () => {
+      try {
+        const response = await axiosInstance.get('/expenses');
         setExpenses(response.data);
-      })
-      .catch(error => {
-        console.error('There was an error fetching the expenses!', error);
-      });
+      } catch (error) {
+        console.log("There was an error fetching the expenses", error);
+      }
+    };
+
+    fetchExpenses();
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    axiosInstance.post('/expenses', { title, amount: parseFloat(amount) })
-      .then(response => {
-        setExpenses([...expenses, response.data]);
-        setTitle('');
-        setAmount('');
-      })
-      .catch(error => {
-        console.error('There was an error adding the expense!', error);
-      });
+    try {
+      const response = await axiosInstance.post('/expenses', { title, amount: parseFloat(amount) });
+      setExpenses([...expenses, response.data]); // Update the state with the new expense
+      setTitle('');
+      setAmount('');
+    } catch (error) {
+      console.log("There was an error adding the expense", error);
+    }
   };
 
-  const handleDelete = (id: number) => {
-    axiosInstance.delete(`/expenses/${id}`)
-    .then(() => {
-      setExpenses(expenses.filter(expense => expense.id !== id));
-
-    })
-    .catch(error => {
-      console.log("There was an error deleting the expense",error)
-    });
+  const handleDelete = async (id: number) => {
+    try {
+      await axiosInstance.delete(`/expenses/${id}`);
+      setExpenses(expenses.filter(expense => expense.id !== id)); // Update the state to remove the deleted expense
+    } catch (error) {
+      console.log("There was an error deleting the expense", error);
+    }
   };
-  
 
   return (
     <div>
@@ -71,10 +69,10 @@ const Expenses: React.FC = () => {
       </form>
       <ul>
         {expenses.map(expense => (
-            <li className="expenseRow" key={expense.id}>
+          <li className="expenseRow" key={expense.id}>
             {expense.title}: ${expense.amount}
-            <button className='deleteButton' onClick={() => handleDelete(expense.id)}>Delete</button>
-            </li>
+            <button className="deleteButton" onClick={() => handleDelete(expense.id)}>Delete</button>
+          </li>
         ))}
       </ul>
     </div>

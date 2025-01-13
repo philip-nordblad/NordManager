@@ -15,37 +15,38 @@ const Events: React.FC = () => {
 
 
   useEffect(() => {
-    axiosInstance.get('/events')
-      .then(response => {
+    const fetchTasks = async () => {
+      try {
+        const response = await axiosInstance.get('/events');
         setEvents(response.data);
-      })
-      .catch(error => {
-        console.error('There was an error fetching the events!', error);
-      });
+      } catch (error) {
+        console.log("There was an error fetching the event", error);
+      }
+    };
+    fetchTasks();
+
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    axiosInstance.post('/events', {name, date})
-      .then(response => {
-      setEvents([...events, response.data]);
+    try {
+      const response = await axiosInstance.post("/events", {name, date});
+      setEvents([...events,response.data]);
       setName('');
       setDate('');
-
-    })
-    .catch(error => {
-      console.error("There was an erro adding the event!", error);
-    });
+    } catch (error) {
+      console.log("There was an error adding the event", error);
+    }
   };
 
-  const handleDelete = (id: number) =>  {
-    axiosInstance.delete(`/events/${id}`)
-    .then(() => {
-      setEvents(events.filter(events => events.id !== id));
-    })
-    .catch(error => {
-      console.log("There was an error deleting the event", error);
-    });
+  const handleDelete = async (id: number) =>  {
+    try {
+      await axiosInstance.delete(`/events/${id}`);
+      setEvents(events.filter(event => event.id !== id));
+
+    } catch (error) {
+      console.log("There was an erro deleting the event", error);
+    }
   };
   
   return (

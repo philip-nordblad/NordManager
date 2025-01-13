@@ -1,16 +1,4 @@
-.deleteButton {
-    background-color: red;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-}
 
-.deleteButton:hover {
-    background-color: darkred;
-}
 
 .expenseRow {
     display: flex;

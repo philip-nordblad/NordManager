@@ -5,6 +5,9 @@ import Expenses from './components/Expenses';
 import Events from './components/Events';
 import Tasks from './components/Tasks';
 import Footer from './components/Footer';
+import Login from './components/sign-up/Login';
+import SignUp from './components/sign-up/SignUp';
+import { BrowserRouter as Router, Routes, Route, Link} from "react-router-dom";
 
 function App() {
   const [currentView, setCurrentView] = useState('expenses');
@@ -23,13 +26,25 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <Header onNavClick={setCurrentView} />
-      <main>
-        {renderContent()}
-      </main>
-      <Footer />
-    </div>
+    <Router>
+      <div className="App">
+      <Routes>
+        <Route path="/" element={<Login />} ></Route>
+        <Route path="/login" />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/*" element={
+        <>
+          <Header onNavClick={setCurrentView} />
+          <main>
+          {renderContent()}
+          </main>
+          <Footer />
+        </>
+        } />
+      </Routes>
+      </div>
+    </Router>
+
   );
 }
 
