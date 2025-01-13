@@ -54,6 +54,14 @@ def add_task():
     conn.close()
     return jsonify({"id" : task_id, "name" : name, "completed" : completed}), 201
 
+@app.route("/api/tasks/<int:id>", methods=["DELETE"])
+def delete_task(id):
+    conn = get_db_connection()
+    conn.execute("DELETE FROM tasks WHERE ID = ?", (id,))
+    conn.commit()
+    conn.close()
+    return "",204
+
 @app.route("/api/events", methods=["GET"])
 def get_events():
     conn = get_db_connection()
@@ -72,6 +80,14 @@ def add_event():
     task_id = conn.execute("SELECT last_insert_rowid()").fetchone()[0]
     conn.close()
     return jsonify({"id" : task_id, "name" : name, "date": date}), 201
+
+@app.route("/api/events/<int:id>", methods=["DELETE"])
+def delete_event(id):
+    conn = get_db_connection()
+    conn.execute("DELETE FROM events WHERE ID = ?", (id,))
+    conn.commit()
+    conn.close()
+    return "", 204
 
 if __name__ == '__main__':
     app.run(port=5000)
