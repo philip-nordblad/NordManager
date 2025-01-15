@@ -12,25 +12,29 @@ const Login: React.FC = () => {
     }
 
     return (
-        <div>
+        <div className='container'>
             <h2>Login</h2>
-            <form onSubmit={handleLogin}>
+            <form onSubmit={handleLogin} className='form'>
+                <p>
                 <input
                 type="email"
                 placeholder='Enter email'
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required/>
-                <input 
+                </p>
+                <p>                <input 
                 type="password"
                 placeholder='Enter password'
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required />
+                </p>
+
                 <button type='submit'>Login</button>
             </form>
-            <p>
-                New user? <a href="/signup">Sign up here</a>
+            <p>New User?<br></br>
+                 <a href="/signup">Sign up here</a>
             </p>
         </div>
     )

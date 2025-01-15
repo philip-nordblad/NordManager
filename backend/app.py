@@ -1,12 +1,54 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from database import get_db_connection, init_db
+from flask_bcrypt import Bcrypt
+from flask_login import LoginManager, UserMixin, login_user, logout_user, current_user
+
 
 app = Flask(__name__)
 CORS(app)
+bcrypt = Bcrypt(app)
+login_manager = LoginManager()
+login_manager.init_app(app)
+app.config['SECRET KEY'] = 'my_cool_key'
+
+
 
 # Initialize the database
 init_db()
+
+# Set up User 
+class User(UserMixin):
+    def __init__(self, id, username,email,password,firstname,lastname):
+        self.id = id
+        self.username = username
+        self.email = email
+        self.password = password
+        self.firstname = firstname
+        self.lastname = lastname
+
+@login_manager.user_loader
+def load_user(user_id):
+    conn = get_db_connection
+    user = conn.execute("SELECT * FROM users where id = ?", (user_id,)).fetchone()
+    conn.close()
+    if user:
+        return User(user['id'], user['username'], user['email'], user['password'], user['firstname'], user['lastname'])
+    return None
+
+@app.route("/api/register", methods = ['POST'])
+def register():
+    data = request.get_json()
+    hashed_password = bcrypt.generate_password_hash(data['password']).decode('utf-8')
+    conn = get_db_connection()
+    conn.execute("INSERT INTO users (username, email, password, firstname, lastname) VALUES (?, ?, ?, ?, ?)", (data['username'], data['email'], data['password'], data['firstname'], data['lastname']))
+    conn.commit()
+    conn.close()
+    return jsonify({'message': 'User registerd successfully'}), 201
+
+
+
+
 
 @app.route("/api/expenses", methods=["GET"])
 def get_expenses():
@@ -54,14 +96,6 @@ def add_task():
     conn.close()
     return jsonify({"id" : task_id, "name" : name, "completed" : completed}), 201
 
-@app.route("/api/tasks/<int:id>", methods=["DELETE"])
-def delete_task(id):
-    conn = get_db_connection()
-    conn.execute("DELETE FROM tasks WHERE ID = ?", (id,))
-    conn.commit()
-    conn.close()
-    return "",204
-
 @app.route("/api/events", methods=["GET"])
 def get_events():
     conn = get_db_connection()
@@ -81,13 +115,15 @@ def add_event():
     conn.close()
     return jsonify({"id" : task_id, "name" : name, "date": date}), 201
 
-@app.route("/api/events/<int:id>", methods=["DELETE"])
-def delete_event(id):
-    conn = get_db_connection()
-    conn.execute("DELETE FROM events WHERE ID = ?", (id,))
-    conn.commit()
-    conn.close()
-    return "", 204
+@app.route("api/register", methods["POST"])
+def register() 
+
+@app.route("/api/login", methods["POST"])
+def login():
+    data = request.get_json()
+    user
+
+
 
 if __name__ == '__main__':
     app.run(port=5000)

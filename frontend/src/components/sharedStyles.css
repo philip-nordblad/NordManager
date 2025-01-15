@@ -46,3 +46,8 @@ button[type="submit"]:hover {
 .deleteButton:hover {
     background-color: darkred;
 }
+
+
+body{
+    background-image: linear-gradient(to right blue,yellow);
+}
