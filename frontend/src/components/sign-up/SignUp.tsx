@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axiosInstance from '../../axiosInstance';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 const SignUp: React.FC = () => {
     const [firstname, setFirstname] = useState('');
@@ -9,6 +10,7 @@ const SignUp: React.FC = () => {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [username, setUsername] = useState('');
     const [error, setError] = useState('');
+    const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -25,6 +27,7 @@ const SignUp: React.FC = () => {
                 lastname
             });
             console.log('User registered successfully:', response.data);
+            navigate('/*');
         } catch (error) {
             console.error('There was an error registering the user:', error);
             setError('Registration failed');
