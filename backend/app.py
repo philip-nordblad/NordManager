@@ -47,6 +47,23 @@ def register():
     return jsonify({'message': 'User registerd successfully'}), 201
 
 
+@app.route('/api/login', methods=['POST'])
+def login():
+    data = request.get_json()
+    conn = get_db_connection()
+    user = conn.execute("SELECT * FROM users WHERE email = ?", (data['email'])).fetchone()
+    conn.close()
+    if user and bcrypt.check_password_hash(user['password'], data['password']):
+        user_obj = User(user['id'], user['username'], user['email'], user['password'], user['firstname'], user['lastname'])
+        login_user(user_obj)
+        return jsonify({'message': 'Logged in successfully'}), 200
+    return jsonify({'message': 'Invalid Credentials'}), 401
+
+@app.route('/api/logout', methods=['POST'])
+def logout():
+    logout_user()
+    return jsonify({'message' : "Logged out successfully"}), 200
+
 
 
 
@@ -115,14 +132,21 @@ def add_event():
     conn.close()
     return jsonify({"id" : task_id, "name" : name, "date": date}), 201
 
-@app.route("api/register", methods["POST"])
-def register() 
+@app.route("/api/tasks/<int:id>", methods=["DELETE"])
+def delete_task(id):
+    conn = get_db_connection()
+    conn.execute("DELETE FROM tasks WHERE id = ?", (id,))
+    conn.commit()
+    conn.close()
+    return "", 204
 
-@app.route("/api/login", methods["POST"])
-def login():
-    data = request.get_json()
-    user
-
+@app.route("/api/events/<int:id>", methods=["DELETE"])
+def delete_event(id):
+    conn = get_db_connection()
+    conn.execute("DELETE FROM events WHERE id = ?", (id,))
+    conn.commit()
+    conn.close()
+    return "", 204
 
 
 if __name__ == '__main__':
